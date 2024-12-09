@@ -1,18 +1,27 @@
-import type { Config } from "tailwindcss";
-
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        leetcode: {
+          orange: '#FFA116',
+          dark: '#1A1A1A',
+          darker: '#151515',
+          gray: '#2C2C2C',
+          text: '#EFEFEF'
+        }
       },
-    },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' }
+        }
+      },
+      animation: {
+        float: 'float 3s ease-in-out infinite'
+      }
+    }
   },
   plugins: [],
-} satisfies Config;
+};
