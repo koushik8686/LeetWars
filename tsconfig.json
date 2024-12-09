@@ -38,7 +38,7 @@
     "src/app/components/landingPage/Navbar.jsx",
     "src/app/components/landingPage/Hero.jsx",
     "src/app/components/landingPage/Features.jsx",
-    "src/app/page.tsx"
+    "src/app/page.jsx"
 , "src/app/layout.tsx", "src/app/auth/page.jsx"  ],
   "exclude": [
     "node_modules"

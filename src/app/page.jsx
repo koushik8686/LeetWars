@@ -27,15 +27,8 @@ const features = [
     description: 'Get comprehensive statistics and visualizations of solving patterns and progress.'
   }
 ]
-
-const testimonials = [
-  { name: 'Alex Johnson', role: 'Software Engineer', content: 'LeetWars has been a game-changer for my interview prep!' },
-  { name: 'Sarah Lee', role: 'CS Student', content: 'I love competing with my classmates using LeetWars groups.' },
-  { name: 'Mike Chen', role: 'Tech Lead', content: 'The insights provided by LeetWars are invaluable for our team.' },
-]
-
-function AnimatedCounter({ value }: { value: number }) {
-  const counterRef = useRef<HTMLSpanElement>(null)
+function AnimatedCounter({ value }) {
+  const counterRef = useRef(null)
   const inView = useInView(counterRef)
   const controls = useAnimation()
 
@@ -50,7 +43,7 @@ function AnimatedCounter({ value }: { value: number }) {
       const duration = 2000
       const startTimestamp = performance.now()
 
-      const step = (timestamp: number) => {
+      const step = (timestamp) => {
         if (!counterRef.current) return
 
         const progress = Math.min((timestamp - startTimestamp) / duration, 1)
@@ -180,10 +173,12 @@ export default function Home() {
                 className="flex flex-col items-center"
               >
                 <div className="flex items-center justify-center w-12 h-12 rounded-full mb-4 bg-[rgba(255,161,22,0.2)]">
-                  <stat.icon className="w-6 h-6 text-[#FFA116]" />
+                  <stat.icon className="h-8 w-8 text-[#FFA116]" />
                 </div>
-                <AnimatedCounter value={stat.value} />
-                <div className="mt-1 text-lg">{stat.name}</div>
+                <div className="text-3xl font-extrabold text-[#FFA116]">
+                  <AnimatedCounter value={stat.value} />
+                </div>
+                <div className="text-lg text-[#9CA3AF]">{stat.name}</div>
               </motion.div>
             ))}
           </div>
@@ -191,80 +186,44 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="py-20 bg-[#151515]">
+      <div className="bg-[#222831] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold text-[#FFA116]">Features</h2>
-            <p className="mt-4 text-xl">Simple yet powerful LeetCode profile comparison tools</p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+            {features.map((feature) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="p-6 rounded-lg transition-all hover:bg-opacity-80 bg-[#2C2C2C] relative overflow-hidden group"
+                transition={{ duration: 0.5 }}
+                className="text-center bg-[#393E46] rounded-lg p-8 shadow-lg hover:bg-[#00ADB5] transition-all"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FFA116] to-[#FF6B6B] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="flex items-center justify-center w-12 h-12 rounded-full mb-4 bg-[rgba(255,161,22,0.2)] relative z-10">
-                  <feature.icon className="w-6 h-6 text-[#FFA116]" />
+                <div className="text-5xl text-[#FFA116] mb-6">
+                  <feature.icon />
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-[#FFA116] relative z-10">{feature.title}</h3>
-                <p className="relative z-10">{feature.description}</p>
+                <h3 className="text-2xl font-semibold text-[#EFEFEF]">{feature.title}</h3>
+                <p className="text-lg text-[#9CA3AF] mt-4">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </div>
+
       {/* Footer */}
-      <footer className="bg-[#151515] text-[#9CA3AF] py-12">
+      <div className="bg-[#222831] text-[#9CA3AF] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="flex justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#FFA116]">LeetWars</h3>
-              <p>Empowering developers to excel in their coding journey.</p>
+              <h2 className="text-xl text-[#FFA116]">LeetWars</h2>
+              <p className="mt-2">Your ultimate platform for LeetCode profile analytics and comparison.</p>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#FFA116]">Quick Links</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Home</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Compare Profiles</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Create Group</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">About Us</a></li>
-              </ul>
+            <div className="space-x-4">
+              <a href="#" className="text-lg hover:text-[#FFA116]">Privacy</a>
+              <a href="#" className="text-lg hover:text-[#FFA116]">Terms</a>
+              <a href="#" className="text-lg hover:text-[#FFA116]">Help</a>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#FFA116]">Resources</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">FAQ</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">API Documentation</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#FFA116]">Connect</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Twitter</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">LinkedIn</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">GitHub</a></li>
-                <li><a href="#" className="hover:text-[#FFA116] transition-colors">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-            <p>&copy; 2023 LeetWars. All rights reserved.</p>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
   )
 }
-

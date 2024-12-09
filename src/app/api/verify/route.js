@@ -21,6 +21,7 @@ export async function GET(req) {
     try {
       decoded = jwt.verify(token, SECRET_KEY);
     } catch (err) {
+      console.log(err);
       return NextResponse.json(
         { message: 'Unauthorized: Invalid token' },
         { status: 401 }
