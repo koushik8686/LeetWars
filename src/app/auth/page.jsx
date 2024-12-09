@@ -7,12 +7,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../components/Loader'; // Import the LoadingSpinner component
-type TabType = 'login' | 'register';
 
-export default function Auth() {
+const Auth = () => {
   const router = useRouter();
   const { data: session, status } = useSession(); // Get session data from next-auth
-  const [activeTab, setActiveTab] = useState<TabType>('login');
+  const [activeTab, setActiveTab] = useState('login');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -43,18 +42,18 @@ export default function Auth() {
     checkUser();
   }, [router, session, status]);
 
-  const setToken = async (email: string) => {
+  const setToken = async (email) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/set-token', {
+      await fetch('/api/set-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
-      }).then((resp)=>{
+      }).then((resp) => {
         if (resp.ok) {
-          router.push('/home')
+          router.push('/home');
         }
       });
     } catch (error) {
@@ -62,12 +61,12 @@ export default function Auth() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -232,4 +231,6 @@ export default function Auth() {
       </motion.div>
     </div>
   );
-}
+};
+
+export default Auth;
