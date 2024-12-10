@@ -10,7 +10,7 @@ export const LeetcodeForm = ({ sethideform }: LeetcodeFormProps) => {
   const [leetcodeUsername, setLeetcodeUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
-
+ 
   const handleLeetcodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -20,7 +20,7 @@ export const LeetcodeForm = ({ sethideform }: LeetcodeFormProps) => {
       // Validate the username
       const validationResponse = await fetch(`https://alfa-leetcode-api.onrender.com/${leetcodeUsername}`);
       const validationData = await validationResponse.json();
-
+      console.log(validationData);
       if (validationData.errors) {
         setFeedbackMessage('Incorrect LeetCode ID');
         toast.error('Incorrect LeetCode ID');

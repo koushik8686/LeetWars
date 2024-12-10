@@ -1,21 +1,54 @@
 import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
-
+import validateLeetCodeId from '../../utils/VerifYLeetcode';
 interface GroupFormProps {
-  onSubmit: (data: { name: string, users: string[] }) => void;
+  HideForm: () => void;
 }
 
-export const GroupForm = ({ onSubmit }: GroupFormProps) => {
-  const [name, setName] = useState('');
-  const [users, setUsers] = useState(['']);
+export const GroupForm = ({ HideForm }: GroupFormProps) => {
+  const [groupName, setGroupName] = useState('');
+  const [users, setUsers] = useState([{ user: '', leetcode_id: '' }]);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, users });
+
+    try {
+      for (const user of users) {
+        const validationData = await validateLeetCodeId(user.leetcode_id);
+        if (validationData.errors) {
+          setFeedbackMessage(`Invalid LeetCode ID for ${user.user}`);
+          return;
+        }
+      }
+
+      const response = await fetch('/api/addgroup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ groupName, users }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create group');
+      }
+
+      setFeedbackMessage('Group created successfully!');
+      setGroupName('');
+      setUsers([{ user: '', leetcode_id: '' }]);
+      HideForm();
+    } catch (error) {
+      setFeedbackMessage(`Error: Unable to create group. ${error}`);
+    }
   };
 
   const addUser = () => {
-    setUsers([...users, '']);
+    if (users.length < 10) {
+      setUsers([...users, { user: '', leetcode_id: '' }]);
+    } else {
+      setFeedbackMessage('Maximum of 10 users allowed.');
+    }
   };
 
   const removeUser = (index: number) => {
@@ -32,8 +65,8 @@ export const GroupForm = ({ onSubmit }: GroupFormProps) => {
           </label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
             className="w-full bg-[#1A1A1A] text-[#EFEFEF] px-4 py-2 rounded-md border border-[#3D3D3D] focus:border-[#FFA116] focus:ring-1 focus:ring-[#FFA116] outline-none"
             required
           />
@@ -43,7 +76,7 @@ export const GroupForm = ({ onSubmit }: GroupFormProps) => {
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="block text-sm font-medium text-[#EFEFEF]">
-                LeetCode Username {index + 1}
+                User {index + 1}
               </label>
               {users.length > 1 && (
                 <button
@@ -57,10 +90,23 @@ export const GroupForm = ({ onSubmit }: GroupFormProps) => {
             </div>
             <input
               type="text"
-              value={user}
+              placeholder="Name"
+              value={user.user}
               onChange={(e) => {
                 const newUsers = [...users];
-                newUsers[index] = e.target.value;
+                newUsers[index].user = e.target.value;
+                setUsers(newUsers);
+              }}
+              className="w-full bg-[#1A1A1A] text-[#EFEFEF] px-4 py-2 rounded-md border border-[#3D3D3D] focus:border-[#FFA116] focus:ring-1 focus:ring-[#FFA116] outline-none"
+              required
+            />
+            <input
+              type="text"
+              placeholder="LeetCode ID"
+              value={user.leetcode_id}
+              onChange={(e) => {
+                const newUsers = [...users];
+                newUsers[index].leetcode_id = e.target.value;
                 setUsers(newUsers);
               }}
               className="w-full bg-[#1A1A1A] text-[#EFEFEF] px-4 py-2 rounded-md border border-[#3D3D3D] focus:border-[#FFA116] focus:ring-1 focus:ring-[#FFA116] outline-none"
@@ -77,6 +123,18 @@ export const GroupForm = ({ onSubmit }: GroupFormProps) => {
           <Plus className="h-4 w-4" />
           <span>Add User</span>
         </button>
+
+        {feedbackMessage && (
+          <div
+            className={`text-sm p-2 rounded mt-4 ${
+              feedbackMessage.includes('Invalid') || feedbackMessage.includes('Failed') || feedbackMessage.includes('error') || feedbackMessage.includes('exists')
+              ? 'bg-red-500/10 text-red-400'
+                : 'bg-green-500/10 text-green-400'
+            }`}
+          >
+            {feedbackMessage}
+          </div>
+        )}
 
         <button
           type="submit"

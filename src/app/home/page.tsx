@@ -2,12 +2,16 @@
 import { Menu, PlusCircle, Users, LogOut, GitCompare, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {LeetcodeForm} from '../components/forms/LeetCodeForm'; // Import the new form component
+import {LeetcodeForm} from '../components/forms/LeetCodeForm';
 import { signOut } from 'next-auth/react';
 import { ComparisonForm } from '../components/forms/ComparisionForm';
 import { GroupForm } from '../components/forms/GroupForm';
 import { ComparisonDetails } from '../components/home/ComparisonDetails';
 import { GroupDetails } from '../components/home/GroupDetails';
+import FetchData from '../utils/FetchData';
+import Image from 'next/image';
+import Loader from '../components/Loader'; // Assuming you have a Loader component
+
 export default function Home() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,18 +19,26 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeContent, setActiveContent] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
-  const [comparisons, setComparisons] = useState([
-    { id: 1, users: ['user1', 'user2'], date: '2024-03-10' },
-    { id: 2, users: ['user3', 'user4'], date: '2024-03-11' }
-  ]);
-  const [groups, setGroups] = useState([
-    { id: 1, name: 'Team Alpha', users: ['user1', 'user2', 'user3'] },
-    { id: 2, name: 'Team Beta', users: ['user4', 'user5', 'user6'] }
-  ]);
+  const [comparisons, setComparisons] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const data = await FetchData()
+      console.log(data);
+      setComparisons(data.comparisions)
+      setGroups(data.groups)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   useEffect(() => {
     // Check authentication and LeetCode ID
     async function checkUser() {
@@ -44,6 +56,7 @@ export default function Home() {
         router.push('/login');
       }
     }
+    fetchData()
     checkUser();
   }, [router]);
 
@@ -66,6 +79,15 @@ export default function Home() {
     }
   }
 
+  // If still loading, show a full-page loader
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#1A1A1A]">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div>
        <div className="flex min-h-screen bg-[#1A1A1A]">
@@ -84,14 +106,14 @@ export default function Home() {
         <div className="p-4">
           <div className="space-y-4">
             <button
-              onClick={() => setActiveForm('addComparison')}
+              onClick={() => {setActiveForm('addComparison'); setActiveContent('null')}}
               className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
             >
               <PlusCircle className="h-5 w-5" />
               <span>Add Comparison</span>
             </button>
             <button
-              onClick={() => setActiveForm('addGroup')}
+              onClick={() => {setActiveForm('addGroup') ; setActiveContent('null')}}
               className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
             >
               <Users className="h-5 w-5" />
@@ -105,17 +127,22 @@ export default function Home() {
               <GitCompare className="h-5 w-5" />
               <span className="font-semibold">Comparisons</span>
             </div>
-            <div className="space-y-2">
-              {comparisons.map((comparison) => (
+            <div  className="space-y-2">
+              { comparisons.length>0&& comparisons.map((comparison) => (
                 <button
                   key={comparison.id}
                   onClick={() => {
                     setActiveContent('comparison');
                     setActiveForm(null);
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
                 >
-                  {comparison.users.join(' vs ')}
+                  <img
+                    src={comparison.img}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full border border-[#3D3D3D]"
+                  />
+                  <span>{comparison.user2}</span>
                 </button>
               ))}
             </div>
@@ -128,22 +155,37 @@ export default function Home() {
               <span className="font-semibold">Groups</span>
             </div>
             <div className="space-y-2">
-              {groups.map((group) => (
+              { groups.length>0&& groups.map((group) => (
                 <button
                   key={group.id}
                   onClick={() => {
                     setActiveContent('group');
                     setActiveForm(null);
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
                 >
-                  {group.name}
+                  <div className="flex -space-x-2">
+                    {group.group_members.slice(0, 3).map((user, index) => (
+                      <img
+                        key={index}
+                        src={user.img}
+                        alt="Group Member Avatar"
+                        className="w-6 h-6 rounded-full border border-[#3D3D3D]"
+                      />
+                    ))}
+                    {group.group_members.length > 3 && (
+                      <span className="w-6 h-6 bg-[#2C2C2C] text-xs text-[#EFEFEF] flex items-center justify-center rounded-full border border-[#3D3D3D]">
+                        +{group.group_members.length - 3}
+                      </span>
+                    )}
+                  </div>
+                  <span>{group.group_name}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
-
+        
         <button
           onClick={handleLogout}
           className="absolute bottom-4 left-4 flex items-center space-x-2 px-4 py-2 text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
@@ -162,19 +204,15 @@ export default function Home() {
           >
             <Menu className="h-6 w-6 text-[#EFEFEF]" />
           </button>
-            {isAuthenticated && ( <>{!hasLeetCodeId && <LeetcodeForm sethideform={setHasLeetCodeId} />}</>)}
+          
+          {isAuthenticated && ( <>{!hasLeetCodeId && <LeetcodeForm sethideform={setHasLeetCodeId} />}</>)}
+          
           {/* Forms */}
           {activeForm === 'addComparison' && (
-            <ComparisonForm onSubmit={(data) => {
-              setComparisons([...comparisons, { id: Date.now(), ...data }]);
-              setActiveForm(null);
-            }} />
+            <ComparisonForm HideForm={() => setActiveForm(null)} />
           )}
           {activeForm === 'addGroup' && (
-            <GroupForm onSubmit={(data) => {
-              setGroups([...groups, { id: Date.now(), ...data }]);
-              setActiveForm(null);
-            }} />
+            <GroupForm  HideForm={() => setActiveForm(null)}/>
           )}
 
           {/* Content */}
