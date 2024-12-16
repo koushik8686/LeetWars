@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addLeetData } from '../../store/LeetSlice'; // Adjust the path
+import { addLeetData } from '../../store/slice'; // Adjust the path
 import fetchLeetcodeData from '../../utils/FetchLeetcodeData'; // Adjust the path
 import { LeetCodeData } from '../../types/leetcodeData'; // Import the type
 import { ActivityLineGraph2 } from '../Graphs2/ActivityLineGraph';

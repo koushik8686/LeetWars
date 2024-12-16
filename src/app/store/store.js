@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './LeetSlice'; // Example reducer
-
+import counterReducer from './slice';
 const store = configureStore({
   reducer: {
     leetinfo: counterReducer,

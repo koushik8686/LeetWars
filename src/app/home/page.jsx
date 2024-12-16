@@ -12,8 +12,8 @@ import FetchData from '../utils/FetchData';
 import Loader from '../components/Loader'; // Assuming you have a Loader component
 import { StatsDetails } from '../components/StatsDetails';
 import { useSelector, useDispatch } from 'react-redux'; // Import hooks for Redux
-import { addLeetData } from '../store/LeetSlice'; // Import the Redux action
-
+// import { addLeetData } from '../store/LeetSlice'; // Import the Redux action
+import {addLeetData} from '../store/slice'
 export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
