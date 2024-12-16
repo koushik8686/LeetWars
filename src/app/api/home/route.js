@@ -37,6 +37,8 @@ export async function GET(req) {
       );
     }
     const data = await FetchData(user.leetcode_id , user.username)
+    console.log(data);
+    
     // Return user data and LeetCode status
     return NextResponse.json( {
           username: user.username,

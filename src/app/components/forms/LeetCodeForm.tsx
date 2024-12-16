@@ -18,7 +18,7 @@ export const LeetcodeForm = ({ sethideform }: LeetcodeFormProps) => {
 
     try {
       // Validate the username
-      const validationResponse = await fetch(`https://alfa-leetcode-api.onrender.com/${leetcodeUsername}`);
+      const validationResponse = await fetch(`https://leetwars-server.onrender.com//${leetcodeUsername}`);
       const validationData = await validationResponse.json();
       console.log(validationData);
       if (validationData.errors) {

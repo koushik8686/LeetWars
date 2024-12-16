@@ -78,7 +78,6 @@ export const ActivityLineGraph2 = ({ userCalendars }: ActivityLineGraphProps) =>
           </LineChart>
         </ResponsiveContainer>
       </div>
-    
     </motion.div>
   );
 };

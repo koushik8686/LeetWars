@@ -13,11 +13,10 @@ const Badges2= ({ badges }) => {
       badges: user.badges,
       badgeCounts: badgeCount
     };
-  });
+  }).sort((a, b) => b.badgeCounts - a.badgeCounts);
   const useHoverState = (length: number) => {
     console.log(length);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    
     const getHoverStyles = (index: number) => {
       if (hoveredIndex === null) return {};
       const offset = (index - hoveredIndex) * 20; // Adjust this value to change the spread

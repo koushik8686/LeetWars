@@ -9,7 +9,7 @@ import ProblemsChart2 from '../Graphs2/ProblemsChart2';
 import LanguageChart2  from '../Graphs2/LanguagesChart';
 import SkillsChart2 from '../Graphs2/SkillsGraph2';
 import Badges2 from '../Graphs2/Badges2';
-
+import Rank from '../Graphs2/Rank';
 interface ComparisonDetailsProps {
   comparission: {
     user1: string;
@@ -88,12 +88,15 @@ export const ComparisonDetails: React.FC<ComparisonDetailsProps> = ({ comparissi
     {name: comparission.user2, skills: user2Data.skills}
   ]:[]
 
+  const RankData=user1Data&&user2Data?[
+    {name: comparission.user1, rank: user1Data.ranking},
+    {name: comparission.user2, rank: user2Data.ranking}
+  ]:[]
+  console.log(RankData);
   const BadgesData = user1Data&&user2Data?[
     {name: comparission.user1, badges: user1Data.badges},
     {name: comparission.user2, badges: user2Data.badges}
   ]:[]
-  console.log(BadgesData);
-  
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white p-8">
       {loading ? (
@@ -114,7 +117,7 @@ export const ComparisonDetails: React.FC<ComparisonDetailsProps> = ({ comparissi
           </div>
         </div>
         <Badges2 badges={BadgesData} />
-
+        <Rank users={RankData}/>
         </>
       )}
     </div>
