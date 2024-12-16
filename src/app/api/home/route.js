@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import Connectmongodb from '../../utils/mongodb'; // Update the path
 import User from '../../models/usermodel'; // Update the path
+import FetchData from '../../utils/FetchLeetcodeData';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 export async function GET(req) {
@@ -35,13 +36,15 @@ export async function GET(req) {
         { status: 404 }
       );
     }
+    const data = await FetchData(user.leetcode_id , user.username)
     // Return user data and LeetCode status
     return NextResponse.json( {
           username: user.username,
           email: user.email,
           leetcode_id: user.leetcode_id,
           comparisions: user.comparisions,
-          groups: user.groups
+          groups: user.groups,
+          data
         },
       { status: 200 }
     );

@@ -6,6 +6,9 @@ export async function POST(req) {
   try {
     const { email } = await req.json();
     const user = await UserModel.findOne({ email });
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
     // Generate JWT token with user id and email
     const id = user._id;
     const token = jwt.sign(
