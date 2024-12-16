@@ -15,6 +15,7 @@ const Badges2= ({ badges }) => {
     };
   });
   const useHoverState = (length: number) => {
+    console.log(length);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     
     const getHoverStyles = (index: number) => {
