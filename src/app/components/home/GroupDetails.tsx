@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addLeetData } from '../../store/LeetSLice';
+import { addLeetData } from '../../store/LeetSlice';
 import fetchLeetcodeData from '../../utils/FetchLeetcodeData';
 import Loader from '../Loader';
 import { LeetCodeData } from '../../types/leetcodeData';
