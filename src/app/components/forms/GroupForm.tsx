@@ -55,7 +55,12 @@ export const GroupForm = ({ HideForm }: GroupFormProps) => {
 
   const addUser = () => {
     if (users.length < 10) {
-      setUsers([...users, { user: '', leetcode_id: '' }]);
+      const newUser = { user: '', leetcode_id: '' };
+      if (!users.some(user => user.user === newUser.user || user.leetcode_id === newUser.leetcode_id)) {
+        setUsers([...users, newUser]);
+      } else {
+        setFeedbackMessage('User or LeetCode ID already exists.');
+      }
     } else {
       setFeedbackMessage('Maximum of 10 users allowed.');
     }

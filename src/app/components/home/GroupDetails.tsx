@@ -10,6 +10,7 @@ import LanguagesChart2 from '../Graphs2/LanguagesChart';
 import SkillsChart2 from '../Graphs2/SkillsGraph2';
 import Badges2 from '../Graphs2/Badges2';
 import { gsap } from 'gsap';
+import LeaderBoard from '../Graphs2/LeaderBoard';
 
 interface GroupDetailsProps {
   group: {
@@ -37,7 +38,7 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
   const [skillsprops, setSkillsPRops] = useState([]);
   const [badgeprops, setbadgeprops] = useState([]);
   const leetData = useSelector((state: { leetinfo: { value: LeetCodeData[] } }) => state.leetinfo.value);
-
+  const [RankingsData, setRankingsData] = useState([])
   // Utility function to merge calendars and normalize dates
   const mergeCalendars = (calendar: Record<string, number>, calendars: Record<string, number>[]) => {
     const updatedCalendar1 = { ...calendar };
@@ -49,7 +50,6 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
     });
     return updatedCalendar1;
   };
-
   // Fetch data for all group members
   useEffect(() => {
     const fetchData = async () => {
@@ -115,8 +115,12 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
           name: data.name,
           badges: data.badges,
         }));
-
-        // Set props for graphs
+        const rankings = usersData.map(data => ({
+          name: data.name,
+          ranking: data.ranking,
+        }));    
+        console.log(rankings);
+        setRankingsData(rankings)
         setbadgeprops(badges);
         setSkillsPRops(skills);
         setLanguageProps(languages);
@@ -186,6 +190,7 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
         <div className="overflow-hidden">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 group-name">{group.group_name}</h2>
           <div className="space-y-4 sm:space-y-6">
+            <LeaderBoard Data={RankingsData} />
             <div className="activity-line-graph">
               <ActivityLineGraph2 userCalendars={activityLineProps} />
             </div>

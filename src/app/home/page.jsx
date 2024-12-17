@@ -11,8 +11,8 @@ import { GroupDetails } from '../components/home/GroupDetails';
 import FetchData from '../utils/FetchData';
 import Loader from '../components/Loader'; // Assuming you have a Loader component
 import { StatsDetails } from '../components/StatsDetails';
-import { useSelector, useDispatch } from 'react-redux'; // Import hooks for Redux
-// import { addLeetData } from '../store/LeetSlice'; // Import the Redux action
+import { useSelector, useDispatch } from 'react-redux'; 
+import { ChevronDown } from 'lucide-react';
 import {addLeetData} from '../store/slice'
 export default function Home() {
   const router = useRouter();
@@ -30,6 +30,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState(null);
   const [leetcode_id, setleetcode_id] = useState("")
+  const [isComparisonsOpen, setIsComparisonsOpen] = useState(true);
+  const [isGroupsOpen, setIsGroupsOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -115,119 +118,148 @@ export default function Home() {
     <div>
        <div className="flex min-h-screen bg-[#1A1A1A]">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64 bg-[#2C2C2C] transition-transform duration-300 ease-in-out z-30`}>
-        <div className="flex items-center justify-between p-4 border-b border-[#3D3D3D]">
-          <div className="flex items-center space-x-2">
-            <GitCompare className="h-6 w-6 text-[#FFA116]" />
-            <span className="text-[#EFEFEF] font-bold text-lg">LeetWars</span>
-          </div>
-          <button onClick={toggleSidebar} className=" text-[#EFEFEF]">
-            <X className="h-6 w-6" />
-          </button>
+      <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64 bg-[#2C2C2C] transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
+  <div className="flex items-center justify-between p-4 border-b border-[#3D3D3D]">
+    <div className="flex items-center space-x-2">
+      <GitCompare className="h-6 w-6 text-[#FFA116]" />
+      <span className="text-[#EFEFEF] font-bold text-lg">LeetWars</span>
+    </div>
+    <button onClick={toggleSidebar} className="text-[#EFEFEF]">
+      <X className="h-6 w-6" />
+    </button>
+  </div>
+
+  <div className="p-4 flex-grow overflow-y-auto">
+    <div className="space-y-4">
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full px-3 py-2 bg-[#3D3D3D] text-[#EFEFEF] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFA116]"
+      />
+      <button
+        onClick={() => {setActiveContent('stats');}}
+        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+      >
+        <BarChart className="h-5 w-5" />
+        <span>Your Analytics</span>
+      </button>
+      <button
+        onClick={() => {setActiveForm('addComparison'); setActiveContent('null')}}
+        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+      >
+        <PlusCircle className="h-5 w-5" />
+        <span>Add Comparison</span>
+      </button>
+      <button
+        onClick={() => {setActiveForm('addGroup') ; setActiveContent('null')}}
+        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+      >
+        <Users className="h-5 w-5" />
+        <span>Add Group</span>
+      </button>
+    </div>
+
+    {/* Comparisons List */}
+    <div className="mt-8">
+      <div className="flex items-center justify-between text-[#EFEFEF] mb-2">
+        <div className="flex items-center space-x-2">
+          <GitCompare className="h-5 w-5" />
+          <span className="font-semibold">Comparisons</span>
         </div>
-
-        <div className="p-4">
-          <div className="space-y-4">
-            <button
-              onClick={() => {setActiveContent('stats');}}
-              className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-            >
-              <BarChart className="h-5 w-5" />
-              <span>Your Analytics</span>
-            </button>
-            <button
-              onClick={() => {setActiveForm('addComparison'); setActiveContent('null')}}
-              className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-            >
-              <PlusCircle className="h-5 w-5" />
-              <span>Add Comparison</span>
-            </button>
-            <button
-              onClick={() => {setActiveForm('addGroup') ; setActiveContent('null')}}
-              className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-            >
-              <Users className="h-5 w-5" />
-              <span>Add Group</span>
-            </button>
-          </div>
-
-          {/* Comparisons List */}
-          <div className="mt-8">
-            
-            <div className="flex items-center space-x-2 text-[#EFEFEF] mb-2">
-              <GitCompare className="h-5 w-5" />
-              <span className="font-semibold">Comparisons</span>
-            </div>
-            <div  className="space-y-2">
-              {comparisons&& comparisons.length>0&& comparisons.map((comparison) => (
-                <button
-                  key={comparison.id}
-                  onClick={() => {
-                    setActiveContent('comparison');
-                    setcurrent_comparision(comparison);
-                    setActiveForm(null);
-                  }}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-                >
-                  <img
-                    src={comparison.img}
-                    alt="User Avatar"
-                    className="w-8 h-8 rounded-full border border-[#3D3D3D]"
-                  />
-                  <span>{comparison.user2}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Groups List */}
-          <div className="mt-8">
-            <div className="flex items-center space-x-2 text-[#EFEFEF] mb-2">
-              <Users className="h-5 w-5" />
-              <span className="font-semibold">Groups</span>
-            </div>
-            <div className="space-y-2">
-              {  groups.length>0&& groups.map((group) => (
-                <button
-                  key={group.id}
-                  onClick={() => {
-                    setActiveContent('group');
-                    setcurrent_group(group);
-                    setActiveForm(null);
-                  }}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-                >
-                  <div className="flex -space-x-2">
-                    {group.group_members.slice(0, 3).map((user, index) => (
-                      <img
-                        key={index}
-                        src={user.img}
-                        alt="Group Member Avatar"
-                        className="w-6 h-6 rounded-full border border-[#3D3D3D]"
-                      />
-                    ))}
-                    {group.group_members.length > 3 && (
-                      <span className="w-6 h-6 bg-[#2C2C2C] text-xs text-[#EFEFEF] flex items-center justify-center rounded-full border border-[#3D3D3D]">
-                        +{group.group_members.length - 3}
-                      </span>
-                    )}
-                  </div>
-                  <span>{group.group_name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        <button
-          onClick={handleLogout}
-          className="absolute bottom-4 left-4 flex items-center space-x-2 px-4 py-2 text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+        <button 
+          onClick={() => setIsComparisonsOpen(!isComparisonsOpen)}
+          className="text-[#FFA116] hover:text-[#FFB346]"
         >
-          <LogOut className="h-5 w-5" />
-          <span>Logout</span>
+          <ChevronDown className={`h-8 w-8 transform ${isComparisonsOpen ? 'rotate-180' : ''} transition-transform`} />
         </button>
       </div>
+      {isComparisonsOpen && (
+        <div className="space-y-2">
+          {comparisons && comparisons.length > 0 && comparisons
+            .filter(comparison => comparison.user2.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map((comparison) => (
+              <button
+                key={comparison.id}
+                onClick={() => {
+                  setActiveContent('comparison');
+                  setcurrent_comparision(comparison);
+                  setActiveForm(null);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+              >
+                <img
+                  src={comparison.img}
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full border border-[#3D3D3D]"
+                />
+                <span>{comparison.user2}</span>
+              </button>
+            ))}
+        </div>
+      )}
+    </div>
 
+    {/* Groups List */}
+    <div className="mt-8">
+      <div className="flex items-center justify-between text-[#EFEFEF] mb-2">
+        <div className="flex items-center space-x-2">
+          <Users className="h-5 w-5" />
+          <span className="font-semibold">Groups</span>
+        </div>
+        <button 
+          onClick={() => setIsGroupsOpen(!isGroupsOpen)}
+          className="text-[#FFA116] hover:text-[#FFB346]"
+        >
+          <ChevronDown className={`h-8 w-8 transform ${isGroupsOpen ? 'rotate-180' : ''} transition-transform`} />
+        </button>
+      </div>
+      {isGroupsOpen && (
+        <div className="space-y-2">
+          {groups.length > 0 && groups
+            .filter(group => group.group_name.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map((group) => (
+              <button
+                key={group.id}
+                onClick={() => {
+                  setActiveContent('group');
+                  setcurrent_group(group);
+                  setActiveForm(null);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+              >
+                <div className="flex -space-x-2">
+                  {group.group_members.slice(0, 3).map((user, index) => (
+                    <img
+                      key={index}
+                      src={user.img}
+                      alt="Group Member Avatar"
+                      className="w-6 h-6 rounded-full border border-[#3D3D3D]"
+                    />
+                  ))}
+                  {group.group_members.length > 3 && (
+                    <span className="w-6 h-6 bg-[#2C2C2C] text-xs text-[#EFEFEF] flex items-center justify-center rounded-full border border-[#3D3D3D]">
+                      +{group.group_members.length - 3}
+                    </span>
+                  )}
+                </div>
+                <span>{group.group_name}</span>
+              </button>
+            ))}
+        </div>
+      )}
+    </div>
+  </div>
+  
+  <button
+    onClick={handleLogout}
+    className="p-4 flex items-center space-x-2 text-red-400 hover:bg-red-400/10 transition-colors"
+  >
+    <LogOut className="h-5 w-5" />
+    <span>Logout</span>
+  </button>
+      </div>
       {/* Main Content */}
       <div className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-0'} transition-margin duration-300 ease-in-out`}>
         <div className="p-4">
@@ -264,3 +296,4 @@ export default function Home() {
     </div>
   );
 }
+

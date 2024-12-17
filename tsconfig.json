@@ -40,7 +40,7 @@
     "src/app/components/landingPage/Hero.jsx",
     "src/app/components/landingPage/Features.jsx",
     "src/app/page.jsx"
-, "src/app/layout.tsx", "src/app/auth/page.jsx", "src/app/home/page.jsx", "src/app/components/home/ComparisonDetails.tsx"  ],
+, "src/app/layout.tsx", "src/app/auth/page.jsx", "src/app/home/page.jsx", "src/app/components/home/ComparisonDetails.tsx", "src/app/utils/mongodb.js"  ],
   "exclude": [
     "node_modules"
   ]

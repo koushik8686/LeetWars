@@ -4,7 +4,6 @@ const FetchData = async (id: string , name:string) => {
         const url = "https://leetwars-server-git-main-koushiks-projects-37ba14e7.vercel.app";
         const profile = await fetch(`${url}/userProfile/${id}`);
         console.log(profile);
-        
         if (!profile.ok) {
             const errorText = await profile.text(); // Get the response body as text
             console.error("Error fetching profile:", errorText);
