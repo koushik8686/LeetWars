@@ -7,7 +7,8 @@ interface LeaderboardProps {
 
 export default function Leaderboard({ Data }: LeaderboardProps) {
   const sortedData = [...Data].sort((a, b) => a.ranking - b.ranking);
-console.log(sortedData);
+  console.log("data" , Data);
+  console.log(sortedData);
   const topThree = sortedData.slice(0, 3);
   const remaining = sortedData.slice(3);
   const getPodiumStyles = (position: number) => {
@@ -63,61 +64,66 @@ console.log(sortedData);
   };
 
   return (
-    <div className="min-h-screen bg-leetcode-gray text-white p-4 sm:p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-center mb-8 sm:mb-12 animate-[fadeIn_1s_ease-out]">
-          <h1 className="text-3xl sm:text-4xl font-bold text-center  text-leetcode-orange">
-            Leetcode Rankings
-          </h1>
-        </div>
+    <>
+      {sortedData.length > 0 && (
+        <div className="min-h-screen bg-leetcode-gray text-white p-4 sm:p-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-center mb-8 sm:mb-12 animate-[fadeIn_1s_ease-out]">
+              <h1 className="text-3xl sm:text-4xl font-bold text-center  text-leetcode-orange">
+                Leetcode Rankings
+              </h1>
+            </div>
 
-        {/* Podium Section */}
-        <div className="relative flex flex-col sm:flex-row items-center sm:items-end justify-center gap-4 h-auto sm:h-[400px] mb-8 sm:mb-16">
-          {[2, 1, 3].map((position) => (
-            <React.Fragment key={position}>
-              {renderPodiumPlace(
-                position,
-                topThree[position - 1].name,
-                topThree[position - 1].ranking
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+            {/* Podium Section */}
+            <div className="relative flex flex-col sm:flex-row items-center sm:items-end justify-center gap-4 h-auto sm:h-[400px] mb-8 sm:mb-16">
+              {[2, 1, 3].map((position) => (
+                <React.Fragment key={position}>
+                  {renderPodiumPlace(
+                    position,
+                    topThree[position - 1].name,
+                    topThree[position - 1].ranking
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
 
-        {/* Table Section */}
-        {remaining.length>0&&
-        <div className="bg-gradient-to-b from-[#282828] to-[#1F1F1F] rounded-xl overflow-hidden border border-slate-700/50 animate-[fadeInUp_1s_ease-out]">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-[#1F1F1F] to-[#2A2A2A]">
-                <tr>
-                  <th className="px-4 sm:px-6 py-4 text-left text-slate-400">Rank</th>
-                  <th className="px-4 sm:px-6 py-4 text-left text-slate-400">Name</th>
-                  <th className="px-4 sm:px-6 py-4 text-right text-slate-400">Ranking</th>
-                </tr>
-              </thead>
-              <tbody>
-                { remaining.map((participant, index) => (
-                  <tr 
-                    key={participant.name}
-                    className="border-t border-[#363636] hover:bg-[#323232] transition-all duration-300 animate-[fadeIn_1s_ease-out]"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <td className="px-4 sm:px-6 py-4 text-slate-500">#{index + 4}</td>
-                    <td className="px-4 sm:px-6 py-4 text-slate-300">{participant.name}</td>
-                    <td className="px-4 sm:px-6 py-4 text-right text-slate-400">
-                      {participant.ranking}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {/* Table Section */}
+            {remaining.length > 0 && (
+              <div className="bg-gradient-to-b from-[#282828] to-[#1F1F1F] rounded-xl overflow-hidden border border-slate-700/50 animate-[fadeInUp_1s_ease-out]">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-[#1F1F1F] to-[#2A2A2A]">
+                      <tr>
+                        <th className="px-4 sm:px-6 py-4 text-left text-slate-400">Rank</th>
+                        <th className="px-4 sm:px-6 py-4 text-left text-slate-400">Name</th>
+                        <th className="px-4 sm:px-6 py-4 text-right text-slate-400">Ranking</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {remaining.map((participant, index) => (
+                        <tr 
+                          key={participant.name}
+                          className="border-t border-[#363636] hover:bg-[#323232] transition-all duration-300 animate-[fadeIn_1s_ease-out]"
+                          style={{ animationDelay: `${index * 100}ms` }}
+                        >
+                          <td className="px-4 sm:px-6 py-4 text-slate-500">#{index + 4}</td>
+                          <td className="px-4 sm:px-6 py-4 text-slate-300">{participant.name}</td>
+                          <td className="px-4 sm:px-6 py-4 text-right text-slate-400">
+                            {participant.ranking}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        } 
-      </div>
-    </div>
+      )}
+    </>
   );
+
 }
 

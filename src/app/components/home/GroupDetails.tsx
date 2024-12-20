@@ -119,7 +119,7 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
           name: data.name,
           ranking: data.ranking,
         }));    
-        console.log(rankings);
+        console.log("rankings" , rankings);
         setRankingsData(rankings)
         setbadgeprops(badges);
         setSkillsPRops(skills);
@@ -127,7 +127,7 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
         setProblemsProps(problems);
         setActivityLineProps(finalActivityData);
       }
-    }, 200);
+    }, 500);
   }, [loading, usersData, group]);
 
   // GSAP Animations after loading is done

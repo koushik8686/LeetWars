@@ -41,9 +41,7 @@ export default function Home() {
     try {
       setIsLoading(true);
       const data = await FetchData();
-      // console.log(data);
-      console.log("yoo");
-      
+      // console.log(data);  
       if (data.comparisions) {
         setComparisons(data.comparisions);
         setGroups(data.groups);
@@ -51,14 +49,11 @@ export default function Home() {
         setleetcode_id(data.leetcode_id);
         // Check if data.data is already in Redux store
         const existingStats = existingLeetStats.value.find(stats => stats.id === leetcode_id);
-        console.log();
-        console.log("loo");
         if (!existingStats) {
           dispatch(addLeetData(data.data)); // Dispatch action to update Redux store
         } else {
           console.log("Data already exists in Redux store", existingStats);
         }
-        console.log("updated" , existingLeetStats);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
