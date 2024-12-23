@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import connectMongoDB from "../../../utils/mongodb"; // MongoDB connection
 import User from "../../../models/usermodel"; // Mongoose User model
-
+import stats from '../../../models/statsmodel'
 const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 
 const handler = NextAuth({
@@ -21,20 +21,18 @@ const handler = NextAuth({
 
       try {
         const { email, name } = user;
-
-        // Connect to MongoDB
         await connectMongoDB();
-
-        // Check if the user exists
         let existingUser = await User.findOne({ email });
         if (!existingUser) {
-          // Register new user if not found
           existingUser = new User({
             email,
             username: name,
             leetcodeUsername: null,
           });
           await existingUser.save();
+          const statsInstance = await stats.findById("6769bcc93832e58fdf9d8e16");
+          statsInstance.users++;
+          await statsInstance.save();
         }
 
         // User exists or is created, return true to allow sign-in

@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import Connectmongodb from '../../utils/mongodb'; // Update the path
 import User from '../../models/usermodel'; // Update the path
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
-
+import stats from '../../models/statsmodel';
 export async function POST(request) {
   try {
     await Connectmongodb();
@@ -31,7 +31,9 @@ export async function POST(request) {
       chats: [],
     });
     await newUser.save();
-
+    const statsInstance = await stats.findById("6769bcc93832e58fdf9d8e16");
+    statsInstance.users++;
+    await statsInstance.save();
     // Generate JWT
     const token = jwt.sign(
       { id: newUser._id, email: newUser.email },

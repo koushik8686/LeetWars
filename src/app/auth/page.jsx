@@ -21,6 +21,14 @@ const Auth = () => {
 
   useEffect(() => {
     async function checkUser() {
+
+      if (status === 'authenticated') {
+        console.log(session);
+        if (session?.user?.email) {
+          setToken(session.user.email); 
+        }
+      }
+  
       try {
         const response = await fetch('/api/verify', { method: 'GET', credentials: 'include' });
         if (response.ok) {
@@ -31,14 +39,6 @@ const Auth = () => {
         router.push('/login');
       }
     }
-
-    if (status === 'authenticated') {
-      console.log(session);
-      if (session?.user?.email) {
-        setToken(session.user.email); // Call to set token in your API
-      }
-    }
-
     checkUser();
   }, [router, session, status]);
 

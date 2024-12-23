@@ -17,7 +17,6 @@ export async function GET(req) {
         { status: 401 }
       );
     }
-    // Verify the JWT
     let decoded;
     try {
       decoded = jwt.verify(token, SECRET_KEY);
@@ -38,11 +37,11 @@ export async function GET(req) {
     }
     const data = await FetchData(user.leetcode_id , user.username)
     console.log(data);
-    
     // Return user data and LeetCode status
     return NextResponse.json( {
           username: user.username,
           email: user.email,
+          avatar: user.avatar,
           leetcode_id: user.leetcode_id,
           comparisions: user.comparisions,
           groups: user.groups,

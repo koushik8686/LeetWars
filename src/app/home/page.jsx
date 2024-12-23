@@ -1,5 +1,5 @@
 'use client';
-import { Menu, PlusCircle, Users, LogOut, GitCompare, X, BarChart } from 'lucide-react';
+import { Menu, PlusCircle, Users, LogOut, GitCompare, X, BarChart , Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LeetcodeForm } from '../components/forms/LeetCodeForm';
@@ -14,12 +14,15 @@ import { StatsDetails } from '../components/StatsDetails';
 import { useSelector, useDispatch } from 'react-redux'; 
 import { ChevronDown } from 'lucide-react';
 import {addLeetData} from '../store/slice'
+import { ComparisonEditForm } from '../components/forms/ComparissionEdit';
+import { GroupEdit } from '../components/forms/GroupEditForm';
 export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
   const existingLeetStats = useSelector((state) => state.leetinfo); // Access current stats from Redux store
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasLeetCodeId, setHasLeetCodeId] = useState(null); 
+  const [userdata, setuserdata] = useState({name:"" , avatar:""})
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeContent, setActiveContent] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
@@ -47,6 +50,7 @@ export default function Home() {
         setGroups(data.groups);
         setStats(data.data);
         setleetcode_id(data.leetcode_id);
+        setuserdata({name:data.username , avatar:data.avatar})
         // Check if data.data is already in Redux store
         const existingStats = existingLeetStats.value.find(stats => stats.id === leetcode_id);
         if (!existingStats) {
@@ -100,7 +104,6 @@ export default function Home() {
     }
   }
 
-  // If still loading, show a full-page loader
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#1A1A1A]">
@@ -123,130 +126,213 @@ export default function Home() {
       <X className="h-6 w-6" />
     </button>
   </div>
+  
 
-  <div className="p-4 flex-grow overflow-y-auto">
-    <div className="space-y-4">
+<div className="p-4 flex-grow overflow-y-auto">
+  <div className="space-y-6">
+    {/* Search Bar */}
+    <div className="relative">
       <input
         type="text"
         placeholder="Search..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full px-3 py-2 bg-[#3D3D3D] text-[#EFEFEF] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFA116]"
+        className="w-full px-4 py-2  text-[#EFEFEF] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFA116]"
       />
+    </div>
+
+    {/* User Info */}
+    <div className="flex items-center space-x-4">
+      <img
+        src={userdata.avatar}
+        alt="User Avatar"
+        className="w-10 h-10 rounded-full border border-[#3D3D3D]"
+      />
+      <div className="flex items-center space-x-2">
+        <span className="text-[#EFEFEF] font-medium">{userdata.name}</span>
+        <button 
+          onClick={() => handleEditUsername()} 
+          className="text-[#FFA116] hover:text-[#FFB346] focus:outline-none"
+        >
+          <Pencil className="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+
+    {/* Navigation Buttons */}
+    <div className="space-y-4">
       <button
-        onClick={() => {setActiveContent('stats');}}
-        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+        onClick={() => setActiveContent('stats')}
+        className="w-full flex items-center space-x-3 px-4 py-2  text-[#EFEFEF] hover:bg-[#4A4A4A] rounded-md transition-colors"
       >
         <BarChart className="h-5 w-5" />
         <span>Your Analytics</span>
       </button>
       <button
-        onClick={() => {setActiveForm('addComparison'); setActiveContent('null')}}
-        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+        onClick={() => {
+          setActiveForm('addComparison');
+          setActiveContent('null');
+        }}
+        className="w-full flex items-center space-x-3 px-4 py-2  text-[#EFEFEF] hover:bg-[#4A4A4A] rounded-md transition-colors"
       >
         <PlusCircle className="h-5 w-5" />
         <span>Add Comparison</span>
       </button>
       <button
-        onClick={() => {setActiveForm('addGroup') ; setActiveContent('null')}}
-        className="w-full flex items-center space-x-2 px-4 py-2 text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
+        onClick={() => {
+          setActiveForm('addGroup');
+          setActiveContent('null');
+        }}
+        className="w-full flex items-center space-x-3 px-4 py-2  text-[#EFEFEF] hover:bg-[#4A4A4A] rounded-md transition-colors"
       >
         <Users className="h-5 w-5" />
         <span>Add Group</span>
       </button>
     </div>
-
-    {/* Comparisons List */}
-    <div className="mt-8">
-      <div className="flex items-center justify-between text-[#EFEFEF] mb-2">
-        <div className="flex items-center space-x-2">
-          <GitCompare className="h-5 w-5" />
-          <span className="font-semibold">Comparisons</span>
-        </div>
-        <button 
-          onClick={() => setIsComparisonsOpen(!isComparisonsOpen)}
-          className="text-[#FFA116] hover:text-[#FFB346]"
-        >
-          <ChevronDown className={`h-8 w-8 transform ${isComparisonsOpen ? 'rotate-180' : ''} transition-transform`} />
-        </button>
-      </div>
-      {isComparisonsOpen && (
-        <div className="space-y-2">
-          {comparisons && comparisons.length > 0 && comparisons
-            .filter(comparison => comparison.user2.toLowerCase().includes(searchTerm.toLowerCase()))
-            .map((comparison) => (
-              <button
-                key={comparison.id}
-                onClick={() => {
-                  setActiveContent('comparison');
-                  setcurrent_comparision(comparison);
-                  setActiveForm(null);
-                }}
-                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-              >
-                <img
-                  src={comparison.img}
-                  alt="User Avatar"
-                  className="w-8 h-8 rounded-full border border-[#3D3D3D]"
-                />
-                <span>{comparison.user2}</span>
-              </button>
-            ))}
-        </div>
-      )}
-    </div>
-
-    {/* Groups List */}
-    <div className="mt-8">
-      <div className="flex items-center justify-between text-[#EFEFEF] mb-2">
-        <div className="flex items-center space-x-2">
-          <Users className="h-5 w-5" />
-          <span className="font-semibold">Groups</span>
-        </div>
-        <button 
-          onClick={() => setIsGroupsOpen(!isGroupsOpen)}
-          className="text-[#FFA116] hover:text-[#FFB346]"
-        >
-          <ChevronDown className={`h-8 w-8 transform ${isGroupsOpen ? 'rotate-180' : ''} transition-transform`} />
-        </button>
-      </div>
-      {isGroupsOpen && (
-        <div className="space-y-2">
-          {groups.length > 0 && groups
-            .filter(group => group.group_name.toLowerCase().includes(searchTerm.toLowerCase()))
-            .map((group) => (
-              <button
-                key={group.id}
-                onClick={() => {
-                  setActiveContent('group');
-                  setcurrent_group(group);
-                  setActiveForm(null);
-                }}
-                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-[#EFEFEF] hover:bg-[#3D3D3D] rounded-md transition-colors"
-              >
-                <div className="flex -space-x-2">
-                  {group.group_members.slice(0, 3).map((user, index) => (
-                    <img
-                      key={index}
-                      src={user.img}
-                      alt="Group Member Avatar"
-                      className="w-6 h-6 rounded-full border border-[#3D3D3D]"
-                    />
-                  ))}
-                  {group.group_members.length > 3 && (
-                    <span className="w-6 h-6 bg-[#2C2C2C] text-xs text-[#EFEFEF] flex items-center justify-center rounded-full border border-[#3D3D3D]">
-                      +{group.group_members.length - 3}
-                    </span>
-                  )}
-                </div>
-                <span>{group.group_name}</span>
-              </button>
-            ))}
-        </div>
-      )}
-    </div>
   </div>
-  
+
+  {/* Comparisons List */}
+  <div className="mt-10">
+    <div className="flex items-center justify-between text-[#EFEFEF] mb-3">
+      <div className="flex items-center space-x-3">
+        <GitCompare className="h-5 w-5" />
+        <span className="font-semibold">Comparisons</span>
+      </div>
+      <button
+        onClick={() => setIsComparisonsOpen(!isComparisonsOpen)}
+        className="text-[#FFA116] hover:text-[#FFB346] transition-transform"
+      >
+        <ChevronDown
+          className={`h-5 w-5 transform ${
+            isComparisonsOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+    </div>
+    {isComparisonsOpen && (
+      <div className="space-y-3">
+        {comparisons &&
+          comparisons
+            .filter((comparison) =>
+              comparison.user2.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((comparison) => (
+              <div
+                onClick={(e) => {
+                  // Ensure the click is not from the pencil button
+                  if (!e.target.closest('button')) {
+                    setActiveContent('comparison');
+                    setcurrent_comparision(comparison);
+                    setActiveForm(null);
+                  }
+                }}
+                key={comparison.id}
+                className="w-full flex items-center justify-between px-4 py-2 text-[#EFEFEF] hover:bg-[#4A4A4A] rounded-md transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <img
+                    src={comparison.img}
+                    alt="Comparison Avatar"
+                    className="w-8 h-8 rounded-full border border-[#3D3D3D]"
+                  />
+                  <span>{comparison.user2}</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setcurrent_comparision(comparison) // Stop propagation explicitly
+                    setActiveForm("editcomparision");
+                    setActiveContent('null');
+                  }}
+                  className="text-[#edecea] hover:text-[#FFB346] focus:outline-none"
+                >
+                  <Pencil className="h-3 w-3" />
+                </button>
+              </div>
+            ))
+                 
+            }
+      </div>
+    )}
+  </div>
+
+  {/* Groups List */}
+  <div className="mt-10">
+    <div className="flex items-center justify-between text-[#EFEFEF] mb-3">
+      <div className="flex items-center space-x-3">
+        <Users className="h-5 w-5" />
+        <span className="font-semibold">Groups</span>
+      </div>
+      <button
+        onClick={() => setIsGroupsOpen(!isGroupsOpen)}
+        className="text-[#FFA116] hover:text-[#FFB346] transition-transform"
+      >
+        <ChevronDown
+          className={`h-5 w-5 transform ${
+            isGroupsOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+    </div>
+    {isGroupsOpen && (
+      <div className="space-y-3">
+        {groups.length > 0 &&
+          groups
+            .filter((group) =>
+              group.group_name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((group) => (
+              <div
+                key={group.id}
+                onClick={(e) => {
+                  // Ensure the click is not from the pencil button
+                  if (!e.target.closest('button')) {
+                    setActiveContent('group');
+                    setcurrent_group(group);
+                    setActiveForm(null);
+                  }
+                }}
+                className="w-full flex items-center justify-between px-4 py-2 text-[#EFEFEF] hover:bg-[#4A4A4A] rounded-md transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="flex -space-x-2">
+                    {group.group_members.slice(0, 3).map((user, index) => (
+                      <img
+                        key={index}
+                        src={user.img}
+                        alt="Group Member Avatar"
+                        className="w-6 h-6 rounded-full border border-[#3D3D3D]"
+                      />
+                    ))}
+                    {group.group_members.length > 3 && (
+                      <span className="w-6 h-6 bg-[#2C2C2C] text-xs text-[#EFEFEF] flex items-center justify-center rounded-full border border-[#3D3D3D]">
+                        +{group.group_members.length - 3}
+                      </span>
+                    )}
+                  </div>
+                  <span>{group.group_name}</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setcurrent_group(group) 
+                    setActiveForm("editgroup");
+                    setActiveContent('null');
+                  }}
+                  className="text-[#fffefd] hover:text-[#FFB346] focus:outline-none"
+                >
+                  <Pencil className="h-3 w-3" />
+                </button>
+              </div>
+            ))
+            
+            }
+      </div>
+    )}
+  </div>
+</div>
+
+
   <button
     onClick={handleLogout}
     className="p-4 flex items-center space-x-2 text-red-400 hover:bg-red-400/10 transition-colors"
@@ -266,8 +352,7 @@ export default function Home() {
           <Menu className="h-6 w-6 text-[#EFEFEF]" />
         </button>
       )}
-          {isAuthenticated && ( <>{!hasLeetCodeId && <LeetcodeForm sethideform={setHasLeetCodeId} />}</>)}
-          
+          {isAuthenticated && ( <>{!hasLeetCodeId && <LeetcodeForm setuserdata={setuserdata} setstats={setStats} sethideform={setHasLeetCodeId} />}</>)}
           {/* Forms */}
           {activeForm === 'addComparison' && (
             <ComparisonForm HideForm={() => {setActiveForm(null) ; fetchData()}} />
@@ -275,7 +360,13 @@ export default function Home() {
           {activeForm === 'addGroup' && (
             <GroupForm  HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
-
+          {activeForm === 'editcomparision' && (
+            <ComparisonEditForm comparission={current_comparision} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+          )}
+          {activeForm === 'editgroup' && (
+            <GroupEdit group={current_group} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+          )}
+          
           {/* Content */}
           {activeContent === 'comparison' && current_comparision && (<ComparisonDetails comparission={current_comparision} />)} 
           {activeContent === 'group' &&  current_group&& <GroupDetails group={current_group}/>}

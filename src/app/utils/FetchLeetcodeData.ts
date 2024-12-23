@@ -1,6 +1,6 @@
 const FetchData = async (id: string , name:string) => {
     try {
-       console.log(id);
+       console.log("id : " , id , " name : " , name);
         const url = "https://leetwars-server-git-main-koushiks-projects-37ba14e7.vercel.app";
         const profile = await fetch(`${url}/userProfile/${id}`);
         if (!profile.ok) {

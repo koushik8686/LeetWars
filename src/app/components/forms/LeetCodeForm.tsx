@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-
+import FetchLeetcodeData from '../../utils/FetchLeetcodeData';
 interface LeetcodeFormProps {
   sethideform: (value: boolean) => void;
+  setuserdata: (data) => void;
+  setstats: (data) => void;
 }
 
-export const LeetcodeForm = ({ sethideform }: LeetcodeFormProps) => {
+export const LeetcodeForm = ({ sethideform , setuserdata , setstats }: LeetcodeFormProps) => {
   const [leetcodeUsername, setLeetcodeUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -26,17 +28,19 @@ export const LeetcodeForm = ({ sethideform }: LeetcodeFormProps) => {
         toast.error('Incorrect LeetCode ID');
         return;
       }
-
       // Save the username if validation succeeds
       const response = await fetch('/api/update-leetcode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ leetcodeUsername }),
+        body: JSON.stringify({ leetcodeUsername, avatar: validationData.avatar }),
         credentials: 'include',
       });
-
       if (response.ok) {
+        const responseData = await response.json();
+        const stats = await FetchLeetcodeData(responseData.username, responseData.name);
         toast.success('LeetCode username saved successfully!');
+        setuserdata({name: responseData.name, avatar: responseData.avatar});
+        setstats(stats);
         sethideform(true);
       } else {
         setFeedbackMessage('Failed to save LeetCode username.');
