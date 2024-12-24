@@ -6,7 +6,7 @@ import { Swords, Mail, Lock, User } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import LoadingSpinner from '../components/Loader'; // Import the LoadingSpinner component
+import LoadingSpinner from '../components/Loader2'; // Import the LoadingSpinner component
 
 const Auth = () => {
   const router = useRouter();

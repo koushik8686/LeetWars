@@ -9,7 +9,6 @@ import ProblemsChart2 from '../Graphs2/ProblemsChart2';
 import LanguagesChart2 from '../Graphs2/LanguagesChart';
 import SkillsChart2 from '../Graphs2/SkillsGraph2';
 import Badges2 from '../Graphs2/Badges2';
-import { gsap } from 'gsap';
 import LeaderBoard from '../Graphs2/LeaderBoard';
 
 interface GroupDetailsProps {
@@ -131,57 +130,6 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
   }, [loading, usersData, group]);
 
   // GSAP Animations after loading is done
-  useEffect(() => {
-    if (!loading) {
-      gsap.from(".group-name", {
-        duration: 1,
-        y: -50,
-        opacity: 0,
-        ease: "power4.out"
-      });
-
-      gsap.from(".activity-line-graph", {
-        duration: 1.5,
-        x: -100,
-        opacity: 0,
-        ease: "power4.out",
-        delay: 0.5
-      });
-
-      gsap.from(".problems-chart", {
-        duration: 1.5,
-        x: 100,
-        opacity: 0,
-        ease: "power4.out",
-        delay: 1
-      });
-
-      gsap.from(".skills-chart", {
-        duration: 1.5,
-        scale: 0.8,
-        opacity: 0,
-        ease: "back.out(1.7)",
-        delay: 1.5
-      });
-
-      gsap.from(".languages-chart", {
-        duration: 1.5,
-        scale: 0.8,
-        opacity: 0,
-        ease: "back.out(1.7)",
-        delay: 2
-      });
-
-      gsap.from(".badges", {
-        duration: 1,
-        y: 50,
-        opacity: 0,
-        ease: "power4.out",
-        delay: 2.5
-      });
-    }
-  }, [loading]);
-
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white p-4 sm:p-8">
       {loading ? (

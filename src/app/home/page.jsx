@@ -16,6 +16,7 @@ import { ChevronDown } from 'lucide-react';
 import {addLeetData} from '../store/slice'
 import { ComparisonEditForm } from '../components/forms/ComparissionEdit';
 import { GroupEdit } from '../components/forms/GroupEditForm';
+import { UserEdit } from '../components/forms/UserEdit';
 export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -151,7 +152,7 @@ export default function Home() {
       <div className="flex items-center space-x-2">
         <span className="text-[#EFEFEF] font-medium">{userdata.name}</span>
         <button 
-          onClick={() => handleEditUsername()} 
+          onClick={() => setActiveForm("edituser")} 
           className="text-[#FFA116] hover:text-[#FFB346] focus:outline-none"
         >
           <Pencil className="h-5 w-5" />
@@ -219,7 +220,6 @@ export default function Home() {
             .map((comparison) => (
               <div
                 onClick={(e) => {
-                  // Ensure the click is not from the pencil button
                   if (!e.target.closest('button')) {
                     setActiveContent('comparison');
                     setcurrent_comparision(comparison);
@@ -285,7 +285,6 @@ export default function Home() {
               <div
                 key={group.id}
                 onClick={(e) => {
-                  // Ensure the click is not from the pencil button
                   if (!e.target.closest('button')) {
                     setActiveContent('group');
                     setcurrent_group(group);
@@ -366,7 +365,9 @@ export default function Home() {
           {activeForm === 'editgroup' && (
             <GroupEdit group={current_group} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
-          
+          {activeForm === 'edituser' && (
+            <UserEdit User={{name: userdata.name, leetcode_id: leetcode_id}} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+          )}
           {/* Content */}
           {activeContent === 'comparison' && current_comparision && (<ComparisonDetails comparission={current_comparision} />)} 
           {activeContent === 'group' &&  current_group&& <GroupDetails group={current_group}/>}

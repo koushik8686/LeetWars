@@ -1,6 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useRef } from 'react';
 import { Trophy, Target, Brain } from 'lucide-react';
 import { StatsCard } from './Graphs/StatsCard';
 import { ProblemsPieChart } from './Graphs/ProblemsPieChart';
@@ -10,59 +8,10 @@ import { ProblemStats } from './Graphs/ProblemStats';
 import { ActivityLineGraph } from './Graphs/ActivityLineGraph';
 import Badges from './Graphs/Badges';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export const StatsDetails = ({ stats }) => {
   const graphRefs = useRef([]);
   const cardRefs = useRef([]);
   const headingRef = useRef(null);
-  useEffect(() => {
-    // Animate heading
-    gsap.fromTo(
-      headingRef.current,
-      { opacity: 0, y: -50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: 'bounce.out',
-      }
-    );
-
-    // Animate cards with stagger effect
-    gsap.fromTo(
-      cardRefs.current,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: 'power2.out',
-        stagger: 0.2,
-      }
-    );
-
-    // Animate graphs when they come into view
-    graphRefs.current.forEach((el) => {
-      if (el) {
-        gsap.fromTo(
-          el,
-          { opacity: 0, scale: 0.8 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-      }
-    });
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white p-8">

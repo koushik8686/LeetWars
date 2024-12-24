@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import validateLeetCodeId from '../../utils/VerifYLeetcode';
 import Loader  from '../../components/Loader2'; // Assuming you have a Loader component
 
-interface ComparisonFormProps {
+interface UserEditPropa {
   HideForm: () => void;
+   User: {
+    name : string;
+    leetcode_id : string;
+  };
 }
 
-export const ComparisonForm = ({ HideForm }: ComparisonFormProps) => {
+export const UserEdit = ({ HideForm , User}: UserEditPropa) => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [friendName, setFriendName] = useState("");
-  const [friendLeetCode, setFriendLeetCode] = useState("");
+  const [name, setname] = useState(User.name);
+  const [leetcode_id, setFriendLeetCode] = useState(User.leetcode_id);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,23 +21,23 @@ export const ComparisonForm = ({ HideForm }: ComparisonFormProps) => {
     setIsLoading(true);
 
     try {
-      const validationData = await validateLeetCodeId(friendLeetCode);
+      const validationData = await validateLeetCodeId(leetcode_id);
       if (validationData.errors) {
         setFeedbackMessage('Incorrect LeetCode ID');
         return;
       }
 
-      const response = await fetch('/api/addcomparision', {
-        method: 'POST',
+      const response = await fetch('/api/register', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: friendName, leetcode: friendLeetCode }),
+        body: JSON.stringify({ username: name, leetcode_id: leetcode_id }),
       });
 
       if (response.ok) {
         setFeedbackMessage(null);
-        setFriendName("");
+        setname("");
         setFriendLeetCode("");
         HideForm();
       } else {
@@ -58,27 +62,27 @@ export const ComparisonForm = ({ HideForm }: ComparisonFormProps) => {
           &times;
         </button>
         
-        <h2 className="text-xl font-bold text-[#EFEFEF] mb-6">Add New Comparison</h2>
+        <h2 className="text-xl font-bold text-[#EFEFEF] mb-6">Edit Your Details</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="block text-sm font-medium text-[#EFEFEF]">
-              Friend Name
+              Edit Name
             </label>
             <input
               type="text"
-              value={friendName}
-              onChange={(e) => setFriendName(e.target.value)}
+              value={name}
+              onChange={(e) => setname(e.target.value)}
               className="w-full bg-[#1A1A1A] text-[#EFEFEF] px-4 py-2 rounded-md border border-[#3D3D3D] focus:border-[#FFA116] focus:ring-1 focus:ring-[#FFA116] outline-none"
               required
             />
           </div>
           <div className="space-y-2">
             <label className="block text-sm font-medium text-[#EFEFEF]">
-              Friend LeetCode ID
+              Edit LeetCode ID
             </label>
             <input
               type="text"
-              value={friendLeetCode}
+              value={leetcode_id}
               onChange={(e) => setFriendLeetCode(e.target.value)}
               className="w-full bg-[#1A1A1A] text-[#EFEFEF] px-4 py-2 rounded-md border border-[#3D3D3D] focus:border-[#FFA116] focus:ring-1 focus:ring-[#FFA116] outline-none"
               required

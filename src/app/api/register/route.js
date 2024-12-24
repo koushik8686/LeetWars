@@ -58,3 +58,30 @@ export async function POST(request) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
+export async function PUT(request) {
+  try {
+    await Connectmongodb();
+    const { username, leetcode_id } = await request.json();
+    const token = request.cookies.get('token')?.value;
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized: Token not provided' }, { status: 401 });
+    }
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const userId = decoded.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    if (username) {
+      user.username = username;
+    }
+    if (leetcode_id) {
+      user.leetcode_id = leetcode_id;
+    }
+    await user.save();
+    return NextResponse.json({ message: 'User updated successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  }
+}

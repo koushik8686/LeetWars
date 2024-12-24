@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import validateLeetCodeId from '../../utils/VerifYLeetcode';
-import Loader  from '../../components/Loader'; // Assuming you have a Loader component
+import Loader  from '../../components/Loader2'; // Assuming you have a Loader component
 
 interface ComparisionEditProps {
   HideForm: () => void;
