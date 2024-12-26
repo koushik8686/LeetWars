@@ -92,7 +92,6 @@ export const ComparisonDetails: React.FC<ComparisonDetailsProps> = ({ comparissi
     {name: comparission.user1, rank: user1Data.ranking},
     {name: comparission.user2, rank: user2Data.ranking}
   ]:[]
-  console.log(RankData);
   const BadgesData = user1Data&&user2Data?[
     {name: comparission.user1, badges: user1Data.badges},
     {name: comparission.user2, badges: user2Data.badges}

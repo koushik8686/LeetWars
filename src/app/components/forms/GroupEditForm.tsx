@@ -5,7 +5,8 @@ import { X, Plus } from 'lucide-react';
 import validateLeetCodeId from '../../utils/VerifYLeetcode';
 
 interface GroupEditProps {
-  HideForm: () => void,
+  HideForm: () => void,  
+  CloseForm :()=> void;
   group: {
     group_name: string;
     group_members: Array<{
@@ -15,7 +16,7 @@ interface GroupEditProps {
   };
 }
 
-export const GroupEdit: React.FC<GroupEditProps> = ({ HideForm , group}) => {
+export const GroupEdit: React.FC<GroupEditProps> = ({ HideForm , CloseForm, group}) => {
   const [groupName, setGroupName] = useState(group.group_name);
   const [users, setUsers] = useState(group.group_members);
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -81,7 +82,7 @@ export const GroupEdit: React.FC<GroupEditProps> = ({ HideForm , group}) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-[#2C2C2C] rounded-lg p-6 max-w-md w-full mx-4 relative">
         <button
-          onClick={HideForm}
+          onClick={CloseForm}
           className="absolute top-4 right-4 text-[#EFEFEF] hover:text-[#FFA116]"
         >
           <X className="h-6 w-6" />

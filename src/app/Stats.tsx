@@ -124,7 +124,7 @@ const StatsSection = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-4xl font-bold text-center bg-gradient-to-r from-[#FFA116] to-[#FF8A00] bg-clip-text text-transparent my-8"
       >
-        Till Now
+        Current Achievements
       </motion.h2>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 const Badges2= ({ badges }) => {
   // Prepare the table data
+  console.log(badges);
   const tableData = badges.map(user => {
     const badgeCount = user.badges.length;
     return {

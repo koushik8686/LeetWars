@@ -31,7 +31,7 @@ const steps = [
   },
   {
     title: "Individual And Group Comparisions",
-    description: "Add Individual And Grop Comparisions Using Navbar Buttond",
+    description: "Add Individual And Grop Comparisions Using Navbar Buttons",
     icon: Trophy,
     image: "/ScreenShot4.png",
     color: "from-orange-500 to-yellow-500"
@@ -73,12 +73,9 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-10 max-w-md mx-auto sm:flex sm:justify-center md:mt-12 gap-4"
             >
-              <a href="#" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-black transition-all hover:bg-opacity-90 bg-[#FFA116]">
-                Compare Profiles
+              <a href="/home" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-black transition-all hover:bg-opacity-90 bg-[#FFA116]">
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-              <a href="#" className="mt-3 sm:mt-0 inline-flex items-center px-6 py-3 border text-base font-medium rounded-md transition-all hover:bg-opacity-10 border-[#FFA116] text-[#FFA116]">
-                Create Group
               </a>
             </motion.div>
           </div>
@@ -128,7 +125,7 @@ export default function Home() {
                   <img
                     src={step.image}
                     alt={step.title}
-                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay transition-transform duration-500 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay transition-transform duration-500 group-hover:scale-110 filter blur-sm group-hover:blur-none"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center p-6 relative z-10">

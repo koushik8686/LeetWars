@@ -19,8 +19,6 @@ const LanguagesChart2 = ({ inputData }) => {
           });
         });
       };
-      
-  console.log(inputData);
     const data = formatData(inputData);
   const pieData = allLanguages.map(language => ({
     name: language,

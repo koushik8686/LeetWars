@@ -7,8 +7,6 @@ interface LeaderboardProps {
 
 export default function Leaderboard({ Data }: LeaderboardProps) {
   const sortedData = [...Data].sort((a, b) => a.ranking - b.ranking);
-  console.log("data" , Data);
-  console.log(sortedData);
   const topThree = sortedData.slice(0, 3);
   const remaining = sortedData.slice(3);
   const getPodiumStyles = (position: number) => {

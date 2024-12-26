@@ -4,9 +4,10 @@ import Loader  from '../../components/Loader2'; // Assuming you have a Loader co
 
 interface ComparisonFormProps {
   HideForm: () => void;
+  CloseForm :()=> void;
 }
 
-export const ComparisonForm = ({ HideForm }: ComparisonFormProps) => {
+export const ComparisonForm = ({ HideForm , CloseForm}: ComparisonFormProps) => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [friendName, setFriendName] = useState("");
   const [friendLeetCode, setFriendLeetCode] = useState("");
@@ -51,7 +52,7 @@ export const ComparisonForm = ({ HideForm }: ComparisonFormProps) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-[#2C2C2C] rounded-lg p-6 max-w-md w-full mx-4 relative">
         <button
-          onClick={HideForm}
+          onClick={CloseForm}
           className="absolute top-2 right-2 text-[#EFEFEF] hover:text-[#FFA116] transition-colors"
           aria-label="Close"
         >

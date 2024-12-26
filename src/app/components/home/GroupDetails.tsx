@@ -118,7 +118,6 @@ export const GroupDetails = ({ group }: GroupDetailsProps) => {
           name: data.name,
           ranking: data.ranking,
         }));    
-        console.log("rankings" , rankings);
         setRankingsData(rankings)
         setbadgeprops(badges);
         setSkillsPRops(skills);

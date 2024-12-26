@@ -1,5 +1,5 @@
 'use client';
-import { Menu, PlusCircle, Users, LogOut, GitCompare, X, BarChart , Pencil } from 'lucide-react';
+import { Menu, PlusCircle, Users, LogOut, GitCompare, X, BarChart , Pencil, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LeetcodeForm } from '../components/forms/LeetCodeForm';
@@ -67,25 +67,34 @@ export default function Home() {
     }
   };
   useEffect(() => {
-    async function checkUser() {
+    async function checkUserAndFetchData() {
       try {
-        const response = await fetch('/api/verify', { method: 'GET', credentials: 'include' });
-        if (response.status) {
+        setIsLoading(true);
+        const response = await fetch('/api/verify', {
+          method: 'GET',
+          credentials: 'include'
+        });
+  
+        if (response.status === 200) {
           const data = await response.json();
           setIsAuthenticated(true);
           setHasLeetCodeId(data.user.hasLeetCodeUsername);
+          await fetchData();
         } else {
-          router.push('/auth'); // Redirect to login if not authenticated
+          console.log("unauthenticated");
+          router.push('/auth');
+          return;
         }
       } catch (error) {
         console.error('Error checking user authentication:', error);
         router.push('/auth');
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchData(); // Call fetchData function to get data and update Redux
-    checkUser(); // Call to check user authentication
-  }, []); // Empty dependency array ensures it only runs once when the component mounts
   
+    checkUserAndFetchData();
+  }, []);
   // Logout handler
   async function handleLogout() {
     try {
@@ -105,6 +114,15 @@ export default function Home() {
     }
   }
 
+  const handleCloseForm = () => {
+    setActiveForm(null);
+  };
+
+  const handleHideForm = () => {
+    setActiveForm(null);
+    fetchData();
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#1A1A1A]">
@@ -120,7 +138,7 @@ export default function Home() {
       <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64 bg-[#2C2C2C] transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
   <div className="flex items-center justify-between p-4 border-b border-[#3D3D3D]">
     <div className="flex items-center space-x-2">
-      <GitCompare className="h-6 w-6 text-[#FFA116]" />
+      <Swords className="h-6 w-6 text-[#FFA116]" />
       <span className="text-[#EFEFEF] font-bold text-lg">LeetWars</span>
     </div>
     <button onClick={toggleSidebar} className="text-[#EFEFEF]">
@@ -354,29 +372,25 @@ export default function Home() {
           {isAuthenticated && ( <>{!hasLeetCodeId && <LeetcodeForm setuserdata={setuserdata} setstats={setStats} sethideform={setHasLeetCodeId} />}</>)}
           {/* Forms */}
           {activeForm === 'addComparison' && (
-            <ComparisonForm HideForm={() => {setActiveForm(null) ; fetchData()}} />
+            <ComparisonForm CloseForm={handleCloseForm} HideForm ={handleHideForm} />
           )}
           {activeForm === 'addGroup' && (
-            <GroupForm  HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+            <GroupForm CloseForm={()=>{setActiveForm(null) ;}} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
           {activeForm === 'editcomparision' && (
-            <ComparisonEditForm comparission={current_comparision} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+            <ComparisonEditForm CloseForm={()=>{setActiveForm(null) ;}} comparission={current_comparision} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
           {activeForm === 'editgroup' && (
-            <GroupEdit group={current_group} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+            <GroupEdit group={current_group} CloseForm={()=>{setActiveForm(null) ;}} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
           {activeForm === 'edituser' && (
-            <UserEdit User={{name: userdata.name, leetcode_id: leetcode_id}} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
+            <UserEdit CloseForm={()=>{setActiveForm(null) ;}} User={{name: userdata.name, leetcode_id: leetcode_id}} HideForm={() => {setActiveForm(null) ; fetchData()}}/>
           )}
           {/* Content */}
           {activeContent === 'comparison' && current_comparision && (<ComparisonDetails comparission={current_comparision} />)} 
           {activeContent === 'group' &&  current_group&& <GroupDetails group={current_group}/>}
           {activeContent ===  'stats' && <StatsDetails stats={stats} />}
-          {!activeForm && !activeContent && (
-            <div className="flex items-center justify-center min-h-[calc(100vh-2rem)]">
-             <StatsDetails stats={stats} />
-            </div>
-          )}
+        
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ interface LeetcodeFormProps {
   sethideform: (value: boolean) => void;
   setuserdata: (data) => void;
   setstats: (data) => void;
+  
 }
 
 export const LeetcodeForm = ({ sethideform , setuserdata , setstats }: LeetcodeFormProps) => {

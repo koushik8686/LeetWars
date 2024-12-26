@@ -2,7 +2,6 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const SkillsChart2 = ({ data }) => {
-  console.log(data);
   // Extract user names and their performance data
   const chartData = data.map(user => ({
     name: user.name,

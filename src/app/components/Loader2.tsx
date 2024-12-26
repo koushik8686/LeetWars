@@ -2,7 +2,7 @@ import React from 'react'
 import './loader2.css'
 export default function Loader2() {
   return (
-    <div>
+    <div className="flex justify-center items-center h-full">
       <div className="svg-frame">
       <svg style={{ "--i": "0", "--j": "0" } as React.CSSProperties}>
       <g id="out1">

@@ -8,9 +8,10 @@ interface UserEditPropa {
     name : string;
     leetcode_id : string;
   };
+  CloseForm:()=>void;
 }
 
-export const UserEdit = ({ HideForm , User}: UserEditPropa) => {
+export const UserEdit = ({ HideForm , User , CloseForm}: UserEditPropa) => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [name, setname] = useState(User.name);
   const [leetcode_id, setFriendLeetCode] = useState(User.leetcode_id);
@@ -55,7 +56,7 @@ export const UserEdit = ({ HideForm , User}: UserEditPropa) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-[#2C2C2C] rounded-lg p-6 max-w-md w-full mx-4 relative">
         <button
-          onClick={HideForm}
+          onClick={CloseForm}
           className="absolute top-2 right-2 text-[#EFEFEF] hover:text-[#FFA116] transition-colors"
           aria-label="Close"
         >
