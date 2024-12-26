@@ -21,7 +21,7 @@ export default function NotFound() {
         </h1>
         
         <p className="text-xl text-[#9CA3AF] mb-8">
-          Oops! This page dosen't exist
+          Oops! This page does not exist
         </p>
 
         <Link 
