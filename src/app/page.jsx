@@ -33,7 +33,7 @@ const steps = [
     title: "Individual And Group Comparisions",
     description: "Add Individual And Grop Comparisions Using Navbar Buttond",
     icon: Trophy,
-    image: "/Ss4.png",
+    image: "/ScreenShot4.png",
     color: "from-orange-500 to-yellow-500"
   }
 ]
