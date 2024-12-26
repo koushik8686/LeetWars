@@ -37,7 +37,7 @@ function AnimatedCounter({ value }) {
 
       const start = 0;
       const end = parseInt(value.toString(), 10);
-      const duration = 2000;
+      const duration = 1000;
       const startTimestamp = performance.now();
 
       const step = (timestamp) => {

@@ -390,7 +390,6 @@ export default function Home() {
           {activeContent === 'comparison' && current_comparision && (<ComparisonDetails comparission={current_comparision} />)} 
           {activeContent === 'group' &&  current_group&& <GroupDetails group={current_group}/>}
           {activeContent ===  'stats' && <StatsDetails stats={stats} />}
-        
         </div>
       </div>
     </div>
