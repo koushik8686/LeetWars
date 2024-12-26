@@ -149,28 +149,6 @@ export default function Home() {
      <StatsSection/>
       {/* Features Section */}
       <Features/>
-      {/* Steps Section */}
-     
-
-      {/* Footer */}
-      <div className="bg-[#222831] text-[#9CA3AF] py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-center md:text-left mb-8 md:mb-0">
-              <h2 className="text-2xl font-bold text-[#FFA116]">LeetWars</h2>
-              <p className="mt-2 max-w-md">Your ultimate platform for LeetCode profile analytics and comparison.</p>
-            </div>
-            <div className="flex space-x-8">
-              <a href="#" className="text-lg hover:text-[#FFA116] transition-colors">Privacy</a>
-              <a href="#" className="text-lg hover:text-[#FFA116] transition-colors">Terms</a>
-              <a href="#" className="text-lg hover:text-[#FFA116] transition-colors">Help</a>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-            <p>&copy; {new Date().getFullYear()} LeetWars. All rights reserved.</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
