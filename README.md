@@ -1,4 +1,4 @@
-v# LeetWars 🚀
+# LeetWars 🚀
 
 Compare LeetCode profiles, track progress, and compete with friends. The ultimate platform for LeetCode profile analytics.
 ## 🌐 Live Site
