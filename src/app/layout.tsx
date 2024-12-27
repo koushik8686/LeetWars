@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./components/Providers";
+import AdSense from "./AdSense";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <AdSense/>
         <link rel="icon" href="/icon.ico" sizes="any" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content={metadata.description} />
