@@ -64,11 +64,11 @@ export const ComparisonDetails: React.FC<ComparisonDetailsProps> = ({ comparissi
   
   const activitylineprops = user1Data && user2Data ? [
     {
-      name: comparission.user1,
+      name: comparission.user2,
       calendar: mergeCalendars(user2Data.calender, user1Data.calender),
     },
     {
-      name: comparission.user2,
+      name: comparission.user1,
       calendar: mergeCalendars(user1Data.calender, user2Data.calender),
     }
   ] : [];
