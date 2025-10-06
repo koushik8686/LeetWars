@@ -25,7 +25,7 @@ export default function Home() {
   const [hasLeetCodeId, setHasLeetCodeId] = useState(null); 
   const [userdata, setuserdata] = useState({name:"" , avatar:""})
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeContent, setActiveContent] = useState(null);
+  const [activeContent, setActiveContent] = useState("stats");
   const [activeForm, setActiveForm] = useState(null);
   const [comparisons, setComparisons] = useState([]);
   const [current_comparision, setcurrent_comparision] = useState(null)

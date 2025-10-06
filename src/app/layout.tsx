@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script"; // Import the Script component
 import "./globals.css";
 import Providers from "./components/Providers";
 import AdSense from "./AdSense";
 
+// --- Font Setup ---
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -15,10 +17,65 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+// --- Enhanced SEO Metadata ---
 export const metadata: Metadata = {
-  title: "Leet Wars" as string,
-  description: "Compare your LeetCode profiles with your friends, track progress, and analyze your coding performance together." as string,
+  metadataBase: new URL('https://leet-wars.vercel.app'),
+  title: {
+    default: "Leet Wars | Compare & Analyze LeetCode Profiles",
+    template: "%s | Leet Wars",
+  },
+  description: "Compare your LeetCode profiles with friends, track progress, and analyze your coding performance together. Settle the score and find out who is the ultimate coder.",
+  keywords: ["LeetCode", "Leetcode Compare", "Leetcode Analysis", "Coding Profile", "Programming Contest", "Code Wars", "Developer Stats", "Technical Interview"],
+  authors: [{ name: "Leet Wars Team", url: "https://leet-wars.vercel.app" }],
+  creator: "Leet Wars Team",
+  manifest: '/site.webmanifest',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: "Leet Wars: Settle the Coding Score",
+    description: "Compare LeetCode profiles with your friends, track progress, and analyze your coding performance together.",
+    url: "https://leet-wars.vercel.app",
+    siteName: 'Leet Wars',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Leet Wars - LeetCode Profile Comparison Tool',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Leet Wars: Settle the Coding Score",
+    description: "Compare LeetCode profiles with friends, track progress, and analyze coding performance.",
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
+
 
 export default function RootLayout({
   children,
@@ -30,36 +87,23 @@ export default function RootLayout({
     "@type": "WebApplication",
     name: "Leet Wars",
     url: "https://leet-wars.vercel.app",
-    description:
-      "Compare your LeetCode profiles with your friends, track progress, and analyze your coding performance together.",
+    description: "Compare your LeetCode profiles with your friends, track progress, and analyze your coding performance together.",
+    applicationCategory: "DeveloperTool",
+    operatingSystem: "All",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://leet-wars.vercel.app/search?q={search_term_string}",
-      "query-input": "required name=search_term_string",
+      target: "https://leet-wars.vercel.app/compare?user1={user1_username}&user2={user2_username}",
+      "query-input": [
+        "required name=user1_username",
+        "required name=user2_username"
+        ],
     },
   };
 
   return (
     <html lang="en">
       <head>
-        <AdSense/>
-        <link rel="icon" href="/icon.ico" sizes="any" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content={metadata.description} />
-        <meta name="keywords" content="LeetCode, coding, programming, compare profiles, analyze progress" />
-        <meta name="author" content="Leet Wars Team" />
-
-        {/* Open Graph Tags */}
-        <meta property="og:title" content="Leet Wars" />
-        <meta property="og:description" content="Compare your LeetCode profiles with your friends, track progress, and analyze your coding performance together." />
-        <meta property="og:image" content="https://leet-wars.vercel.app/og-image.jpg" /> {/* Replace with an actual image */}
-        <meta property="og:url" content="https://leet-wars.vercel.app" />
-        <meta property="og:type" content="website" />
-
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://leet-wars.vercel.app" />
-
-        {/* Structured Data */}
+        <AdSense />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -68,6 +112,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Google Analytics Scripts using next/script */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-8PZTQRNPYG`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-8PZTQRNPYG');
+            `,
+          }}
+        />
+        
         <Providers>{children}</Providers>
       </body>
     </html>
